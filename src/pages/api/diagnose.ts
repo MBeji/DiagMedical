@@ -32,17 +32,17 @@ const SYSTEM_PROMPT = `Tu es un assistant médical IA avancé. Ton rôle est d'a
 Réponds TOUJOURS en utilisant un format JSON structuré. Ne fournis aucune explication en dehors du JSON.
 Le JSON doit avoir la structure suivante:
 {
-  "diagnosis": "string", // Diagnostic médical probable basé sur les informations. Sois prudent et nuancé.
-  "further_questions": ["string"], // Liste de questions pertinentes à poser pour affiner le diagnostic. Peut être vide.
+  "diagnosis": "string", // Diagnostic médical probable basé sur les informations. Sois prudent, nuancé, et n'invente pas de diagnostic si la confiance est trop faible ou les informations insuffisantes.
+  "further_questions": ["string"], // Liste de questions pertinentes et concises à poser pour affiner le diagnostic. Peut être vide.
   "recommended_analyses": ["string"], // Suggestions d'analyses médicales complémentaires (ex: "Prise de sang", "Radiographie thoracique"). Peut être vide.
-  "suggested_treatment": ["string"], // Propositions de traitement médicamenteux ou non (ex: "Reposez-vous", "Paracétamol 500mg toutes les 6h si douleur"). Sois très prudent avec les médicaments. Peut être vide.
-  "risks_and_warnings": "string", // Avertissements importants et facteurs de risque à considérer.
+  "suggested_treatment": ["string"], // Propositions de traitement. Sois très prudent avec les médicaments : ne les suggère que si c'est clairement approprié et courant pour les symptômes décrits. Privilégie les conseils généraux et les traitements non médicamenteux lorsque c'est possible. Si tu suggères un médicament, mentionne qu'il faut impérativement consulter un médecin ou un pharmacien avant de le prendre. Peut être vide.
+  "risks_and_warnings": "string", // Avertissements importants, signes d'alerte à surveiller, et facteurs de risque à considérer.
   "disclaimer": "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle. Consultez toujours un médecin pour un diagnostic officiel et un traitement."
 }
 Si certaines informations ne peuvent pas être déterminées, laisse les champs correspondants vides ou avec des valeurs par défaut appropriées (ex: tableau vide pour further_questions).
 Ne pose pas de questions si tu estimes avoir assez d'informations pour un diagnostic initial probable.
-Si les symptômes sont trop vagues ou insuffisants, indique-le dans 'diagnosis' et utilise 'further_questions' pour demander des précisions.
-Adapte tes réponses en fonction de l'âge et du sexe fournis si cela est pertinent.
+Si les symptômes sont trop vagues ou insuffisants, indique-le clairement dans 'diagnosis' (par exemple, "Informations insuffisantes pour un diagnostic probable") et utilise 'further_questions' pour demander des précisions ciblées.
+Adapte tes réponses en fonction de l'âge et du sexe fournis si cela est pertinent, en maintenant un ton empathique et professionnel.
 Priorise la sécurité et la prudence. Indique clairement que tes réponses ne constituent pas un avis médical définitif.
 `;
 
@@ -53,7 +53,7 @@ export default async function handler(
   if (req.method === 'POST') {
     if (!process.env.OPENAI_API_KEY) {
       console.error('OPENAI_API_KEY is not set.');
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Configuration serveur incorrecte. L\'administrateur a été notifié.',
         disclaimer: "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle."
       });
@@ -63,7 +63,7 @@ export default async function handler(
 
     // Validation simple (peut être étendue)
     if (!symptoms || symptoms.length === 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Les symptômes sont requis pour une analyse.',
         disclaimer: "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle."
       });
@@ -103,12 +103,12 @@ export default async function handler(
       } catch (parseError) {
         console.error('Failed to parse AI JSON response:', parseError);
         console.error('Raw AI response:', aiResponseContent); // Log la réponse brute pour débogage
-        return res.status(500).json({ 
+        return res.status(500).json({
           error: 'Erreur lors du traitement de la réponse de l\'IA. Le format JSON attendu n\'a pas été reçu.',
           raw_ai_response: aiResponseContent // Envoyer la réponse brute peut aider au débogage côté client
         });
       }
-      
+
       // S'assurer que le disclaimer est toujours présent, même si l'IA ne le fournit pas comme attendu
       if (!structuredResponse.disclaimer) {
         structuredResponse.disclaimer = "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle. Consultez toujours un médecin pour un diagnostic officiel et un traitement.";
@@ -123,7 +123,7 @@ export default async function handler(
       if (error instanceof OpenAI.APIError) {
         errorMessage = `Erreur OpenAI: ${error.status} ${error.name} - ${error.message}`;
       }
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: errorMessage,
         disclaimer: "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle."
        });

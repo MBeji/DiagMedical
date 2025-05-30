@@ -33,7 +33,7 @@ Développer une application web permettant de recueillir les données médicales
 │   │   └── layout.tsx    # Layout principal (exemple)
 │   ├── pages/            # Routes Next.js (principalement pour les API Routes)
 │   │   └── api/
-│   │       └── diagnose.ts # Endpoint d’IA (à créer)
+│   │       └── diagnose.ts # Endpoint pour le diagnostic IA
 │   ├── components/       # Composants UI React
 │   ├── lib/              # Fonctions métier (IA, parsing, etc.)
 │   ├── types/            # Interfaces et types TypeScript
@@ -153,4 +153,4 @@ Les contributions sont les bienvenues ! Veuillez ouvrir une issue ou une pull re
 
 ---
 
-*Ce README a été généré et sera complété au fur et à mesure du développement du projet.*
+*Ce README décrit l'état actuel du projet. Des améliorations et fonctionnalités supplémentaires pourront être ajoutées ultérieurement.*

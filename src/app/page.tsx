@@ -46,7 +46,7 @@ export default function HomePage() {
       symptoms: symptomsArray.length > 0 ? symptomsArray : undefined,
       history: historyArray.length > 0 ? historyArray : undefined,
     };
-    
+
     if (age && isNaN(requestData.age!)) {
         requestData.age = undefined;
     }
@@ -166,20 +166,20 @@ export default function HomePage() {
         )}
 
         {apiResponse && !error && (
-          <div className="mt-6 p-4 bg-green-50 border border-green-300 rounded w-full shadow-md">
-            <h2 className="text-xl font-semibold mb-3 text-green-800">Résultats de l'analyse :</h2>
-            
+          <div className="mt-6 p-6 bg-white border border-gray-200 rounded-lg w-full shadow-lg"> {/* Conteneur principal plus neutre et avec plus de padding */}
+            <h2 className="text-2xl font-semibold mb-6 text-center text-blue-700 border-b pb-3">Résultats de l'Analyse</h2>
+
             {apiResponse.diagnosis && (
-              <div className="mb-3">
-                <h3 className="font-bold text-lg text-gray-700">Diagnostic probable :</h3>
-                <p className="text-gray-600">{apiResponse.diagnosis}</p>
+              <div className="mb-5 pb-4 border-b border-gray-200">
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">Diagnostic Probable</h3>
+                <p className="text-gray-700 text-base">{apiResponse.diagnosis}</p>
               </div>
             )}
 
             {apiResponse.further_questions && apiResponse.further_questions.length > 0 && (
-              <div className="mb-3">
-                <h3 className="font-bold text-lg text-gray-700">Questions complémentaires :</h3>
-                <ul className="list-disc list-inside text-gray-600">
+              <div className="mb-5 pb-4 border-b border-gray-200">
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">Questions Complémentaires</h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1 text-base">
                   {apiResponse.further_questions.map((question, index) => (
                     <li key={index}>{question}</li>
                   ))}
@@ -188,9 +188,9 @@ export default function HomePage() {
             )}
 
             {apiResponse.recommended_analyses && apiResponse.recommended_analyses.length > 0 && (
-              <div className="mb-3">
-                <h3 className="font-bold text-lg text-gray-700">Analyses recommandées :</h3>
-                <ul className="list-disc list-inside text-gray-600">
+              <div className="mb-5 pb-4 border-b border-gray-200">
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">Analyses Recommandées</h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1 text-base">
                   {apiResponse.recommended_analyses.map((analysis, index) => (
                     <li key={index}>{analysis}</li>
                   ))}
@@ -199,9 +199,9 @@ export default function HomePage() {
             )}
 
             {apiResponse.suggested_treatment && apiResponse.suggested_treatment.length > 0 && (
-              <div className="mb-3">
-                <h3 className="font-bold text-lg text-gray-700">Suggestions de traitement :</h3>
-                <ul className="list-disc list-inside text-gray-600">
+              <div className="mb-5 pb-4 border-b border-gray-200">
+                <h3 className="font-semibold text-xl text-gray-800 mb-2">Suggestions de Traitement</h3>
+                <ul className="list-disc list-inside text-gray-700 space-y-1 text-base">
                   {apiResponse.suggested_treatment.map((treatment, index) => (
                     <li key={index}>{treatment}</li>
                   ))}
@@ -210,15 +210,16 @@ export default function HomePage() {
             )}
 
             {apiResponse.risks_and_warnings && (
-              <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 text-yellow-700 rounded">
-                <h4 className="font-bold">Avertissements importants :</h4>
-                <p>{apiResponse.risks_and_warnings}</p>
+              <div className="mt-5 p-4 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-md shadow">
+                <h3 className="font-semibold text-xl text-yellow-900 mb-2">Avertissements Importants</h3>
+                <p className="text-base">{apiResponse.risks_and_warnings}</p>
               </div>
             )}
-            
+
             {/* Affichage du disclaimer de l'API s'il existe */}
             {apiResponse.disclaimer && (
-              <div className="mt-4 p-3 bg-gray-100 border border-gray-300 text-gray-600 rounded">
+              <div className="mt-5 p-4 bg-gray-50 border border-gray-300 text-gray-700 rounded-md shadow">
+                 <h3 className="font-semibold text-lg text-gray-800 mb-2">Note Importante</h3>
                  <p className="text-sm italic">{apiResponse.disclaimer}</p>
               </div>
             )}
