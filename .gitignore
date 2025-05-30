@@ -1,0 +1,44 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+
+# Test results
+/coverage
+
+# Local environment variables
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Vercel (already created, but good to have in gitignore if it contains sensitive info or build artifacts)
+# However, .vercel/project.json is often committed. For now, let's keep .vercel/ out.
+# If specific files under .vercel need to be ignored, they can be added.
+# Let's keep .vercel/ out of gitignore for now as per Vercel's recommendation for project linking.
+# We will ignore only .vercel/output which contains build artifacts.
+.vercel/output
+
+# TypeScript cache
+*.tsbuildinfo
+
+# macOS
+.DS_Store
+._*
+
+# Optional: IDE-specific files
+# .vscode/
+# .idea/
+# *.swp
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+```

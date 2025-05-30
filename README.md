@@ -86,9 +86,9 @@ Développer une application web permettant de recueillir les données médicales
 
 ### Variables d'environnement
 
-Les variables d'environnement sont gérées via le fichier `.env.local`. Un exemple est fourni dans `.env.local.example`.
+Les variables d'environnement sont gérées via le fichier `.env.local`. Copiez `.env.local.example` vers `.env.local` et remplissez les valeurs.
 
-*   `OPENAI_API_KEY`: Votre clé API OpenAI.
+*   `OPENAI_API_KEY`: **Requis**. Votre clé API OpenAI. Elle est essentielle pour que la fonctionnalité de diagnostic par IA fonctionne.
 *   `VERCEL_TOKEN`: (Pour la CI/CD) Token d'accès Vercel. À configurer dans les secrets GitHub de votre dépôt.
 *   `VERCEL_ORG_ID`: (Pour la CI/CD, si Vercel CLI en a besoin) ID de votre organisation Vercel.
 *   `VERCEL_PROJECT_ID`: (Pour la CI/CD, si Vercel CLI en a besoin) ID de votre projet Vercel.
@@ -109,7 +109,7 @@ Assurez-vous d'avoir configuré les secrets suivants dans votre dépôt GitHub :
 ### `/api/diagnose`
 
 *   **Méthode**: `POST`
-*   **Description**: Reçoit les données médicales de l'utilisateur, interagit avec le modèle d'IA pour générer un diagnostic probable, des suggestions d'analyses et une proposition de traitement.
+*   **Description**: Reçoit les données médicales de l'utilisateur et interagit avec l'API OpenAI (GPT-4 par défaut) pour générer un diagnostic probable, des questions complémentaires, des suggestions d'analyses, et une proposition de traitement.
 *   **Corps de la requête (exemple)**:
     ```json
     {
@@ -122,12 +122,20 @@ Assurez-vous d'avoir configuré les secrets suivants dans votre dépôt GitHub :
 *   **Réponse (exemple de structure)**:
     ```json
     {
-      "diagnosis": "Grippe probable.",
-      "further_questions": ["Avez-vous des douleurs musculaires ?", "Depuis combien de temps avez-vous ces symptômes ?"],
-      "recommended_analyses": ["Test PCR grippe"],
-      "suggested_treatment": ["Reposez-vous", "Buvez beaucoup de liquides", "Paracétamol si fièvre élevée"],
-      "risks_and_warnings": ["Ceci n'est pas un diagnostic médical officiel. Consultez un médecin."],
-      "disclaimer": "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle."
+      "diagnosis": "Possible infection virale mineure.",
+      "further_questions": [
+        "Avez-vous noté une éruption cutanée ?",
+        "Votre température a-t-elle dépassé 38.5°C ?"
+      ],
+      "recommended_analyses": [
+        "Repos et hydratation",
+        "Surveillance des symptômes pendant 48h"
+      ],
+      "suggested_treatment": [
+        "Paracétamol en cas de fièvre ou de douleur, selon la posologie habituelle."
+      ],
+      "risks_and_warnings": "Si les symptômes s'aggravent ou si de nouveaux symptômes apparaissent, consultez un médecin sans tarder. Ce diagnostic est une suggestion basée sur des informations limitées.",
+      "disclaimer": "Ce service est un outil d'assistance et ne remplace pas une consultation médicale professionnelle. Consultez toujours un médecin pour un diagnostic officiel et un traitement."
     }
     ```
 
